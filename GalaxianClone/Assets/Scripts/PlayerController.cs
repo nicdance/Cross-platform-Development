@@ -9,9 +9,15 @@ public class PlayerController : MonoBehaviour
     private float objectWidth;
     private float objectHeight;
     private CharacterController controller;
-
+    
     public float speed = 5f;
     public Rigidbody rb = null;
+
+    //Used for projectiles
+    public Projectile projectilePrefad;
+    public Transform spawnPoint;
+    public ProjectilePool projectilePool;
+
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +35,15 @@ public class PlayerController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
         rb.velocity = movement * speed;
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Debug.Log("Fire");
+            Projectile clone;
+            clone = projectilePool.GetProjectile();
+            clone.transform.position = spawnPoint.transform.position;
+            clone.gameObject.SetActive(true);
+        }
     }
 
     void LateUpdate()
