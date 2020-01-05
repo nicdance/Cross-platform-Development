@@ -67,6 +67,11 @@ public class GameManager : MonoBehaviour
                 return true;
             }
         }
+
+        if (EnemyPool.instance.isEnemyActive())
+        {
+            return true;
+        }
         NextLevel();
         ResetEnemies();
         return false;
