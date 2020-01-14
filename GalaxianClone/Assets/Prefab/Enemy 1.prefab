@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4946439736326240596}
   - component: {fileID: 4946439736326240599}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,6 +200,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 9d932400936f8864ba70d5dd3a87d214,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 906a582cf95771745ac61f39989f91ac, type: 2}
+    - target: {fileID: -1504981713932161579, guid: 9d932400936f8864ba70d5dd3a87d214,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 906a582cf95771745ac61f39989f91ac, type: 2}
+    - target: {fileID: -1504981713932161579, guid: 9d932400936f8864ba70d5dd3a87d214,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 906a582cf95771745ac61f39989f91ac, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d932400936f8864ba70d5dd3a87d214, type: 3}
 --- !u!4 &5606715675964237799 stripped
