@@ -8,6 +8,7 @@ public class SpawnManager : MonoBehaviour
     public float enemySpawnInterval;    //time between enemy spawns
     public float waveSpawnInterval;     //time between wave spawns
     public float untilFirstSpawn;     //time between wave spawns
+    public float untilFirstDiveCheck;   
     int currentWave = 0;
     int enemyID = 0;
     int mediumID = 0;
@@ -24,7 +25,9 @@ public class SpawnManager : MonoBehaviour
     [Header("Formations")]
     public Formation smallFormation; // This will be for the smaller shoips
     public Formation mediumFormation; // This will be for the medium  shoips
-    public Formation largeFormation; // This will be for the larger shoips
+    public Formation largeFormation; // This will be for the medium  shoips
+
+
 
     [System.Serializable]   
     public class Wave {
@@ -38,15 +41,87 @@ public class SpawnManager : MonoBehaviour
 
     [Header("Waves")]
     public List<Wave> waveList = new List<Wave>();
-
     public List<Paths> activePaths = new List<Paths>();
 
+
+    // Dive Variables
+    [Header("Diving")]
+    public bool canDive;
+    public List<GameObject> divePaths = new List<GameObject>();
 
 
     // Start is called before the first frame update
     void Start()
     {
         Invoke("StartSpawn", untilFirstSpawn);
+        StartCoroutine("CheckReadyToDive");
+    }
+
+
+
+
+    IEnumerator CheckReadyToDive()
+    {
+        Debug.Log("Waiting for first Dive Check");
+        yield return new WaitForSeconds(untilFirstDiveCheck);
+        while (!GameManager.instance.CheckIdle())
+        {
+            Debug.Log("Not All IDLE. Waiting.");
+            yield return new WaitForSeconds(1);
+        }
+        Debug.Log("all activeEnemies idle");
+        //Invoke("SetDiving", Random.Range(1, 3));
+        StartCoroutine("SetDiving");
+        yield return null;
+    }
+
+    public void StartNewDive()
+    {
+        StopCoroutine("CheckReadyToDive");
+        StopCoroutine("SetDiving");
+        StartCoroutine("SetDiving");
+    }
+
+    IEnumerator  SetDiving()
+    {
+        yield return new  WaitForSeconds(Random.Range(1, 3));
+        Debug.Log("Diving");
+        if (GameManager.instance.activeEnemies.Count > 0)
+        {
+            int path = Random.Range(0, divePaths.Count);
+            int enemy = Random.Range(0, GameManager.instance.activeEnemies.Count);
+
+            //if (!GameManager.instance.AreEnemiesAlive())
+            //{
+            //    Debug.Log("Game Over");
+            //    yield return null;
+            //}
+
+            //while (GameManager.instance.activeEnemies[enemy].isDiving || GameManager.instance.activeEnemies[enemy].isDead)
+            //{
+            //    enemy = Random.Range(0, GameManager.instance.activeEnemies.Count);
+            //}
+
+            if (GameManager.instance.activeEnemies[enemy].isDiving || GameManager.instance.activeEnemies[enemy].isDead)
+            {
+                Debug.Log("Enemy " + enemy + " can't Dive. " + GameManager.instance.activeEnemies[enemy].isDiving +":"+ 
+                    GameManager.instance.activeEnemies[enemy].isDead);
+                StartNewDive();
+                yield return null;
+            }
+
+            Debug.Log("Enemy " + enemy);
+            GameObject newPath = Instantiate(divePaths[path], GameManager.instance.activeEnemies[enemy].transform.position, Quaternion.identity) as GameObject;
+          
+            GameManager.instance.activeEnemies[enemy].SetDivePath(newPath.GetComponent<Paths>());
+
+            Debug.Log("Enemy " + enemy + " Is diving");
+            StartNewDive();
+        }
+        else
+        {
+            CancelInvoke("SetDiving");
+        }
     }
 
     IEnumerator SpawnWaves() {

@@ -32,17 +32,21 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
-        rb.velocity = movement * speed;
-
-        if (Input.GetButtonDown("Fire1"))
+       // if (GameManager.instance.gameStarted)
         {
-            Debug.Log("Fire");
-            Projectile clone;
-            clone = projectilePool.GetProjectile();
-            clone.transform.position = spawnPoint.transform.position;
-            clone.gameObject.SetActive(true);
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
+            rb.velocity = movement * speed;
+
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Debug.Log("Fire");
+                Projectile clone;
+                clone = projectilePool.GetProjectile();
+                clone.transform.position = spawnPoint.transform.position;
+                clone.gameObject.SetActive(true);
+            }
+
         }
     }
 

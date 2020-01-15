@@ -26,8 +26,7 @@ public class Projectile : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
-            GameManager.instance.AddToScore(enemy.score);
-            collision.gameObject.SetActive(false);
+            enemy.HitEnemy();
         }
         // MusicManager.instance.PlaySplatSound();
         GameManager.instance.CheckEnemiesActive();

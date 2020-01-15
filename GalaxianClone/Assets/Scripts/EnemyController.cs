@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour
     public float reachDistance = 0.4f;
     public float rotationSpeed = 5f;
     public bool userBezier = false;
+    public bool isDiving = false;
+    public bool isDead = false;
 
     private float distance; // distance to next point
 
@@ -23,7 +25,8 @@ public class EnemyController : MonoBehaviour
     public enum EnemyState {
         ONPATH, // On a Path
         FLYIN,  // Spawning
-        IDLE
+        IDLE,
+        DIVING
     }
 
     public EnemyState enemyState;
@@ -31,6 +34,8 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.instance.activeEnemies.Add(this);
+        GameManager.instance.mainEnemies.Add(this);
     }
 
     // Update is called once per frame
@@ -39,13 +44,19 @@ public class EnemyController : MonoBehaviour
         switch (enemyState)
         {
             case EnemyState.ONPATH:
+                isDiving = false;
                 MoveOnPath(pathToFollow);
                 break;
             case EnemyState.FLYIN:
+                isDiving = false;
                 MoveToFormation();
                 break;
             case EnemyState.IDLE:
-
+                isDiving = false;
+                break;
+            case EnemyState.DIVING:
+                isDiving = true;
+                MoveOnPath(pathToFollow);
                 break;
             default:               
                 break;
@@ -71,8 +82,9 @@ public class EnemyController : MonoBehaviour
         {
             transform.SetParent(formation.gameObject.transform);
             transform.eulerAngles = new Vector3(90, 0, 180);
-            enemyState = EnemyState.IDLE;
 
+          
+            enemyState = EnemyState.IDLE;
         }
     }
 
@@ -151,5 +163,33 @@ public class EnemyController : MonoBehaviour
         pathToFollow = Path;
         enemyID = id;
         formation = newFormation;
+    }
+
+    public void HitEnemy() {
+        isDead = true;
+        GameManager.instance.activeEnemies.Remove(this);
+        // PLay sound
+
+        // show particles
+
+        // increment score
+        GameManager.instance.AddToScore(score);
+        
+        //hide enemy
+        this.gameObject.SetActive(false);
+
+    }
+
+    public void SetDivePath(Paths path) {
+
+        if (!isDead)
+        {
+            isDiving = true;
+            pathToFollow = path;
+            //Debug.Log(transform.parent.parent);
+            transform.SetParent(null);
+            enemyState = EnemyState.DIVING;
+
+        }
     }
 }

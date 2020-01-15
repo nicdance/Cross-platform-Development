@@ -29,13 +29,17 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int level = 1;
 
-    public List<EnemyController> enemies;
+    public List<EnemyController> activeEnemies;
+    public List<EnemyController> mainEnemies;
+
+    public bool gameStarted;
 
     // Start is called before the first frame update
     void Start()
     {
         UpdateUIText();
-        enemies = new List<EnemyController>();
+        activeEnemies = new List<EnemyController>();
+        mainEnemies = new List<EnemyController>();
     }
 
     // Updates the UI text
@@ -58,9 +62,22 @@ public class GameManager : MonoBehaviour
         ResetEnemies();
     }
 
+    public bool AreEnemiesAlive()
+    {
+
+        foreach (EnemyController enemy in activeEnemies)
+        {
+            if (!enemy.isDead)
+            {
+                return true;
+            }
+        }
+        return false;
+
+    }
     public bool CheckEnemiesActive() {
 
-        foreach ( EnemyController enemy in enemies)
+        foreach ( EnemyController enemy in activeEnemies)
         {
             if (enemy.gameObject.activeSelf)
             {
@@ -80,10 +97,22 @@ public class GameManager : MonoBehaviour
 
     public void ResetEnemies()
     {
-        foreach (EnemyController enemy in enemies)
+        foreach (EnemyController enemy in activeEnemies)
         {
             enemy.gameObject.SetActive(true);
         }
         
+    }
+
+    public bool CheckIdle() {
+        foreach (var enemy in activeEnemies)
+        {
+            if (enemy.enemyState != EnemyController.EnemyState.IDLE && enemy.gameObject.activeSelf)
+            {
+                return false;
+            }
+        }
+        gameStarted = true;
+        return true;
     }
 }
