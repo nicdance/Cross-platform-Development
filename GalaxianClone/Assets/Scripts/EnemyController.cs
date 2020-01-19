@@ -15,8 +15,11 @@ public class EnemyController : MonoBehaviour
     public bool userBezier = false;
     public bool isDiving = false;
     public bool isDead = false;
+    public bool isIdle = false;
+    public bool setUpStart = true;
 
-    private float distance; // distance to next point
+    private float distance; // disance to next point
+    public float WaitToIdle = 1.0f;
 
     public int enemyID;
     public Formation formation;
@@ -48,13 +51,16 @@ public class EnemyController : MonoBehaviour
                 MoveOnPath(pathToFollow);
                 break;
             case EnemyState.FLYIN:
-                isDiving = false;
+    //            isDiving = false;
                 MoveToFormation();
                 break;
             case EnemyState.IDLE:
+                setUpStart = false;
                 isDiving = false;
+               // CheckInPosition();
                 break;
             case EnemyState.DIVING:
+          //      isIdle = false;
                 isDiving = true;
                 MoveOnPath(pathToFollow);
                 break;
@@ -62,6 +68,14 @@ public class EnemyController : MonoBehaviour
                 break;
         }
         
+    }
+
+    bool  CheckInPosition() {
+
+        if (Vector3.Distance(transform.position, formation.GetVectorPosition(enemyID)) <= 0.0001f) {
+            return true;
+        }
+        return false;
     }
 
     void MoveToFormation() {
@@ -81,13 +95,19 @@ public class EnemyController : MonoBehaviour
         if (Vector3.Distance(transform.position, formation.GetVectorPosition(enemyID)) <=0.0001f)
         {
             transform.SetParent(formation.gameObject.transform);
-            transform.eulerAngles = new Vector3(90, 0, 180);
+            //transform.eulerAngles = new Vector3(90, 0, 180);
+            transform.eulerAngles = new Vector3(0, 180, 0);
 
-          
+            Invoke("SetToIdle", WaitToIdle);
+        }
+    }
+    void SetToIdle() {
+        CancelInvoke("SetToIdle");
+        if (CheckInPosition())
+        {
             enemyState = EnemyState.IDLE;
         }
     }
-
     void MoveOnPath(Paths path)
     {
 
@@ -105,7 +125,8 @@ public class EnemyController : MonoBehaviour
 
             if (target != Vector3.zero)
             {
-                target.z = 0;
+                // target.z = 0;
+                target.y = 0;
                 target = target.normalized;
                 Quaternion rotation = Quaternion.LookRotation(target);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
@@ -142,6 +163,12 @@ public class EnemyController : MonoBehaviour
             if (currentWayPoint >= path.bezierObj.Count)
             {
                 currentWayPoint = 0;
+                //if (enemyState == EnemyState.DIVING)
+                if (GameManager.instance.gameStarted)
+                {
+                    transform.position = GameObject.Find("SpawnManager").transform.position;
+                    Destroy(pathToFollow.gameObject);
+                }
                 enemyState = EnemyState.FLYIN;
             }
         }
@@ -154,6 +181,12 @@ public class EnemyController : MonoBehaviour
             if (currentWayPoint >= path.pathObjList.Count )
             {
                 currentWayPoint = 0;
+                //if (enemyState == EnemyState.DIVING)
+                if (GameManager.instance.gameStarted)
+                {
+                    transform.position = GameObject.Find("SpawnManager").transform.position;
+                    Destroy(pathToFollow.gameObject);
+                }
                 enemyState = EnemyState.FLYIN;
             }
         }
@@ -163,11 +196,25 @@ public class EnemyController : MonoBehaviour
         pathToFollow = Path;
         enemyID = id;
         formation = newFormation;
+        gameObject.SetActive(true);
+       // transform.SetParent(null);
     }
 
     public void HitEnemy() {
         isDead = true;
         GameManager.instance.activeEnemies.Remove(this);
+
+        //    if (pathToFollow.gameObject != null)
+        {
+            //  if (GameManager.instance.gameStarted == true)
+            if (isDiving == true)
+            {
+                Destroy(pathToFollow.gameObject);
+            }
+
+        }
+
+
         // PLay sound
 
         // show particles
@@ -177,6 +224,7 @@ public class EnemyController : MonoBehaviour
         
         //hide enemy
         this.gameObject.SetActive(false);
+
 
     }
 

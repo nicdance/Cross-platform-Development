@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     public bool gameStarted;
 
+    public SpawnManager spawnManager;
+
     // Start is called before the first frame update
     void Start()
     {

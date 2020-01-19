@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody))]
 public class Projectile : MonoBehaviour
 {
     public float speed;
@@ -15,8 +17,9 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.velocity = Vector3.up * speed;
-        if (transform.position.y > 22)
+        // rb.velocity = Vector3.up * speed;
+        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        if (transform.position.z > 42)
         {
             gameObject.SetActive(false);
         }
@@ -26,6 +29,18 @@ public class Projectile : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
+            enemy.HitEnemy();
+        }
+        // MusicManager.instance.PlaySplatSound();
+        GameManager.instance.CheckEnemiesActive();
+        DestroyProjectile();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
             enemy.HitEnemy();
         }
         // MusicManager.instance.PlaySplatSound();

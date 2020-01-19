@@ -8,7 +8,7 @@ public class SpawnManager : MonoBehaviour
     public float enemySpawnInterval;    //time between enemy spawns
     public float waveSpawnInterval;     //time between wave spawns
     public float untilFirstSpawn;     //time between wave spawns
-    public float untilFirstDiveCheck;   
+    public float untilFirstDiveCheck;
     int currentWave = 0;
     int enemyID = 0;
     int mediumID = 0;
@@ -57,9 +57,14 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine("CheckReadyToDive");
     }
 
+    //public void ResetEnemies()
+    //{
+    //    foreach (EnemyController enemy in activeEnemies)
+    //    {
+    //        enemy.gameObject.SetActive(true);
+    //    }
 
-
-
+    //}
     IEnumerator CheckReadyToDive()
     {
         Debug.Log("Waiting for first Dive Check");
@@ -71,6 +76,7 @@ public class SpawnManager : MonoBehaviour
         }
         Debug.Log("all activeEnemies idle");
         //Invoke("SetDiving", Random.Range(1, 3));
+        StopCoroutine("SetDiving");
         StartCoroutine("SetDiving");
         yield return null;
     }
@@ -79,48 +85,36 @@ public class SpawnManager : MonoBehaviour
     {
         StopCoroutine("CheckReadyToDive");
         StopCoroutine("SetDiving");
+        StopAllCoroutines();
         StartCoroutine("SetDiving");
     }
 
     IEnumerator  SetDiving()
     {
-        yield return new  WaitForSeconds(Random.Range(1, 3));
-        Debug.Log("Diving");
+        CancelInvoke("StartNewDive");
         if (GameManager.instance.activeEnemies.Count > 0)
         {
             int path = Random.Range(0, divePaths.Count);
             int enemy = Random.Range(0, GameManager.instance.activeEnemies.Count);
 
-            //if (!GameManager.instance.AreEnemiesAlive())
-            //{
-            //    Debug.Log("Game Over");
-            //    yield return null;
-            //}
 
-            //while (GameManager.instance.activeEnemies[enemy].isDiving || GameManager.instance.activeEnemies[enemy].isDead)
-            //{
-            //    enemy = Random.Range(0, GameManager.instance.activeEnemies.Count);
-            //}
-
-            if (GameManager.instance.activeEnemies[enemy].isDiving || GameManager.instance.activeEnemies[enemy].isDead)
+            if (GameManager.instance.activeEnemies[enemy].isDiving )//|| )//!GameManager.instance.activeEnemies[enemy].isIdle)
             {
-                Debug.Log("Enemy " + enemy + " can't Dive. " + GameManager.instance.activeEnemies[enemy].isDiving +":"+ 
-                    GameManager.instance.activeEnemies[enemy].isDead);
-                StartNewDive();
+                Invoke("StartNewDive", Random.Range(1, 3));
+
                 yield return null;
             }
-
-            Debug.Log("Enemy " + enemy);
             GameObject newPath = Instantiate(divePaths[path], GameManager.instance.activeEnemies[enemy].transform.position, Quaternion.identity) as GameObject;
           
             GameManager.instance.activeEnemies[enemy].SetDivePath(newPath.GetComponent<Paths>());
 
-            Debug.Log("Enemy " + enemy + " Is diving");
-            StartNewDive();
+
+            Invoke("StartNewDive", Random.Range(1, 3));
+            //StartNewDive();
         }
         else
         {
-            CancelInvoke("SetDiving");
+            CancelInvoke("StartNewDive");
         }
     }
 
@@ -136,8 +130,9 @@ public class SpawnManager : MonoBehaviour
             // Small Ships first
             for (int i = 0; i < waveList[currentWave].spawnPerWave; i++)
             {
-                GameObject newEnemy = Instantiate(smallEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
-                EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                //GameObject newEnemy = Instantiate(smallEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
+                // EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                EnemyController enemyController = EnemyPool.instance.GetEnemy();
                 enemyController.SpawnSetup(activePaths[PathsToTake()], enemyID, smallFormation);
                 enemyID++;
                 // pauses for spawn interval
@@ -148,8 +143,10 @@ public class SpawnManager : MonoBehaviour
             // Medium  Ships first
             for (int i = 0; i < waveList[currentWave].mediumPerWave; i++)
             {
-                GameObject newEnemy = Instantiate(mediumEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
-                EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                //GameObject newEnemy = Instantiate(mediumEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
+                //EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+
+                EnemyController enemyController = EnemyPool.instance.GetEnemy();
                 enemyController.SpawnSetup(activePaths[PathsToTake()], mediumID, mediumFormation);
                 mediumID++;
                 // pauses for spawn interval
@@ -159,8 +156,11 @@ public class SpawnManager : MonoBehaviour
             // Large  Ships first
             for (int i = 0; i < waveList[currentWave].largePerWave; i++)
             {
-                GameObject newEnemy = Instantiate(largeEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
-                EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                //GameObject newEnemy = Instantiate(largeEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
+                //EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+
+
+                EnemyController enemyController = EnemyPool.instance.GetEnemy();
                 enemyController.SpawnSetup(activePaths[PathsToTake()], largeID, largeFormation);
                 largeID++;
                 // pauses for spawn interval

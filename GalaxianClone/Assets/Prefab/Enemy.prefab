@@ -114,6 +114,8 @@ MonoBehaviour:
   reachDistance: 0.4
   rotationSpeed: 10
   userBezier: 1
+  isDiving: 0
+  isDead: 0
   enemyID: 0
   formation: {fileID: 0}
   enemyState: 0

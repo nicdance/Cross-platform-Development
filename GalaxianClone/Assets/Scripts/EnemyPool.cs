@@ -25,7 +25,7 @@ public class EnemyPool : MonoBehaviour
     private bool notEnoughEnemiesInPool = true;
 
 
-    private List<EnemyController> enemies;
+    public  List<EnemyController> enemies;
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +56,7 @@ public class EnemyPool : MonoBehaviour
 
         if (notEnoughEnemiesInPool)
         {
-            EnemyController newEnemy = Instantiate(pooledEnemy);
+            EnemyController newEnemy = Instantiate(pooledEnemy, transform.position, Quaternion.identity);
             newEnemy.gameObject.SetActive(false);
             newEnemy.gameObject.transform.SetParent(gameObject.transform);
             enemies.Add(newEnemy);

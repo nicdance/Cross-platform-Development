@@ -6,10 +6,12 @@ using UnityEngine;
 public class Formation : MonoBehaviour
 {
     public int gridSizeX = 10;
-    public int gridSizeY = 2;
+    //public int gridSizeY = 2;
+    public int gridSizeZ = 2;
 
     public float gridOffsetX = 1;
-    public int gridOffsetY = 1;
+    //public int gridOffsetY = 1;
+    public int gridOffsetZ = 1;
 
     public int divider = 4;
 
@@ -54,31 +56,33 @@ public class Formation : MonoBehaviour
         
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    int num = 0;
-    //    CreateGrid();
-    //    foreach (Vector3 item in gridList)
-    //    {
-    //        Gizmos.DrawWireSphere(GetVectorPosition(num), .1f);
-    //        num++;
-    //    }
-    //}
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        int num = 0;
+        CreateGrid();
+        foreach (Vector3 item in gridList)
+        {
+            Gizmos.DrawWireSphere(GetVectorPosition(num), .1f);
+            num++;
+        }
+    }
 
     public void CreateGrid() {
         gridList.Clear();
         int num = 0;
         for (int i = 0; i < gridSizeX; i++)
         {
-            for (int j = 0; j < gridSizeY; j++)
+            for (int j = 0; j < gridSizeZ; j++)
             {
                 //float x = gridOffsetX * i;
                 float x = (gridOffsetX + gridOffsetX * 2 * (num / divider)) * Mathf.Pow(-1, num % 2 + 1);
                 //float y = gridOffsetY * j;
-                float y = gridOffsetY * ((num % divider) / 2);
+                float z = gridOffsetZ * ((num % divider) / 2);
 
                 //Vector3 vector = new Vector3(this.transform.position.x + x, this.transform.position.y + y, 0);
-                Vector3 vector = new Vector3(x, y, 0);
+                //Vector3 vector = new Vector3(x, y, 0);
+                Vector3 vector = new Vector3(x, 0, z);
                 num++;
                 gridList.Add(vector);
             }
