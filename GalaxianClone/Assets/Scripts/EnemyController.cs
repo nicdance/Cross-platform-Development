@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         GameManager.instance.activeEnemies.Add(this);
-        GameManager.instance.mainEnemies.Add(this);
+       // GameManager.instance.mainEnemies.Add(this);
     }
 
     // Update is called once per frame
@@ -101,6 +101,7 @@ public class EnemyController : MonoBehaviour
             Invoke("SetToIdle", WaitToIdle);
         }
     }
+
     void SetToIdle() {
         CancelInvoke("SetToIdle");
         if (CheckInPosition())
@@ -113,6 +114,7 @@ public class EnemyController : MonoBehaviour
 
         if (userBezier)
         {
+            Debug.Log("Size of Path" + path.bezierObj.Count);
             // Move Enemy
             distance = Vector3.Distance(path.bezierObj[currentWayPoint],
                                         transform.position);
@@ -197,6 +199,8 @@ public class EnemyController : MonoBehaviour
         enemyID = id;
         formation = newFormation;
         gameObject.SetActive(true);
+        //GameManager.instance.activeEnemies.Add(this);
+
        // transform.SetParent(null);
     }
 
@@ -207,7 +211,7 @@ public class EnemyController : MonoBehaviour
         //    if (pathToFollow.gameObject != null)
         {
             //  if (GameManager.instance.gameStarted == true)
-            if (isDiving == true)
+            if (isDiving == true && pathToFollow!=null)
             {
                 Destroy(pathToFollow.gameObject);
             }
@@ -221,11 +225,21 @@ public class EnemyController : MonoBehaviour
 
         // increment score
         GameManager.instance.AddToScore(score);
-        
+
+
         //hide enemy
-        this.gameObject.SetActive(false);
+        // this.gameObject.SetActive(false);
+        //transform.position = GameObject.Find("SpawnManager").transform.position;
 
+        StopCoroutine("CheckLevel");
+        StartCoroutine("CheckLevel");
+        Destroy(this.gameObject);
+    }
 
+    IEnumerator CheckLevel() {
+        Debug.Log("checking Level");
+        GameManager.instance.CheckNewLevel();
+        yield return null;
     }
 
     public void SetDivePath(Paths path) {

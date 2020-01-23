@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,9 +16,12 @@ public class GameManager : MonoBehaviour
         if (instance != null)
         {
             Debug.LogWarning("More than one instance of ProjectilePool found!");
+            Destroy(this.gameObject);
             return;
         }
         instance = this;
+
+      //  DontDestroyOnLoad(this.gameObject);
     }
 
     #endregion
@@ -41,7 +45,7 @@ public class GameManager : MonoBehaviour
     {
         UpdateUIText();
         activeEnemies = new List<EnemyController>();
-        mainEnemies = new List<EnemyController>();
+      //  mainEnemies = new List<EnemyController>();
     }
 
     // Updates the UI text
@@ -59,14 +63,36 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
+        Debug.Log("Next Level Called");
         level ++;
         UpdateUIText();
         ResetEnemies();
+
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void CheckNewLevel() {
+        if (!AreEnemiesAlive())
+        {
+            Debug.Log("All Enemies Dead");
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("DivePath"))
+            {
+                Destroy(obj);
+            }
+            NextLevel();
+        }
+        else
+        {
+            Debug.Log("Some Enemies Stil Alive");
+        }
     }
 
     public bool AreEnemiesAlive()
     {
-
+        if (activeEnemies.Count <1)
+        {
+            return false;
+        }
         foreach (EnemyController enemy in activeEnemies)
         {
             if (!enemy.isDead)
@@ -92,24 +118,29 @@ public class GameManager : MonoBehaviour
             return true;
         }
         NextLevel();
-        ResetEnemies();
+       // ResetEnemies();
         return false;
     }
 
 
     public void ResetEnemies()
     {
-        foreach (EnemyController enemy in activeEnemies)
-        {
-            enemy.gameObject.SetActive(true);
-        }
+        activeEnemies.Clear();
+      //  EnemyPool.instance.ResetEnemies();
+        gameStarted = false;
+        spawnManager.ResetWave();
+        //foreach (EnemyController enemy in activeEnemies)
+        //{
+        //    enemy.gameObject.SetActive(true);
+        //}
         
     }
 
     public bool CheckIdle() {
+        Debug.Log("CheckIdle");
         foreach (var enemy in activeEnemies)
         {
-            if (enemy.enemyState != EnemyController.EnemyState.IDLE && enemy.gameObject.activeSelf)
+            if (enemy.enemyState != EnemyController.EnemyState.IDLE)
             {
                 return false;
             }

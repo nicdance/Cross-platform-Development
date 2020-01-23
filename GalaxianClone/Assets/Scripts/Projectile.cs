@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
             enemy.HitEnemy();
         }
         // MusicManager.instance.PlaySplatSound();
-        GameManager.instance.CheckEnemiesActive();
+     //   GameManager.instance.CheckEnemiesActive();
         DestroyProjectile();
     }
 
@@ -44,7 +44,7 @@ public class Projectile : MonoBehaviour
             enemy.HitEnemy();
         }
         // MusicManager.instance.PlaySplatSound();
-        GameManager.instance.CheckEnemiesActive();
+     //   GameManager.instance.CheckEnemiesActive();
         DestroyProjectile();
     }
 

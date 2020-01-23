@@ -1,0 +1,2 @@
+E:\GIT\Crosss Platform Development\GalaxianClone\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+E:\GIT\Crosss Platform Development\GalaxianClone\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

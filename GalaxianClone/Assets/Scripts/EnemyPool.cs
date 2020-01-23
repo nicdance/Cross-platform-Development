@@ -64,4 +64,12 @@ public class EnemyPool : MonoBehaviour
         }
         return null;
     }
+
+    public void ResetEnemies() {
+        foreach (EnemyController enemy in enemies)
+        {
+            enemy.gameObject.transform.SetParent(gameObject.transform);
+            enemy.transform.position = gameObject.transform.position;
+        }
+    }
 }

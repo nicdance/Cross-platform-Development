@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
             Vector3 movement = new Vector3(moveHorizontal, 0.0f,0.0f);
             rb.velocity = movement * speed;
 
-            if (Input.GetButtonDown("Fire1") && Time.time >timeToNextFire)
+            if (Input.GetButtonDown("Fire1") && Time.time >timeToNextFire && GameManager.instance.gameStarted)
             {
                 timeToNextFire = Time.time + fireSpeed;
                 Projectile clone;

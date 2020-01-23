@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 8828646627991903423}
   m_Layer: 0
   m_Name: XYDive
-  m_TagString: Untagged
+  m_TagString: DivePath
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

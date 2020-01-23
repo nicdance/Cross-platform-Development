@@ -577,6 +577,10 @@ MonoBehaviour:
   waveSpawnInterval: 2
   untilFirstSpawn: 2
   untilFirstDiveCheck: 5
+  minDiveInterval: 3
+  maxDiveInterval: 5
+  minEnemiesToDive: 2
+  maxEnemiesToDive: 4
   smallEnemyPrefab: {fileID: 9135754467762606625, guid: 00fb590fac158e74ca7ad0669c0371d8,
     type: 3}
   mediumEnemyPrefab: {fileID: 9135754467762606625, guid: 00fb590fac158e74ca7ad0669c0371d8,
@@ -790,7 +794,7 @@ MonoBehaviour:
   activeEnemies: []
   mainEnemies: []
   gameStarted: 0
-  spawnManager: {fileID: 0}
+  spawnManager: {fileID: 1255316438}
 --- !u!4 &1614879380
 Transform:
   m_ObjectHideFlags: 0
@@ -1005,6 +1009,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pooledEnemy: {fileID: 9135754467762606684, guid: 00fb590fac158e74ca7ad0669c0371d8,
     type: 3}
+  enemies: []
 --- !u!1 &1829250437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,6 +1375,11 @@ PrefabInstance:
         type: 3}
       propertyPath: fireSpeed
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4976044419379071333, guid: 5baeb8dcd5da10f429794a1923af5776,
+        type: 3}
+      propertyPath: speed
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4976044419379071328, guid: 5baeb8dcd5da10f429794a1923af5776,
         type: 3}
