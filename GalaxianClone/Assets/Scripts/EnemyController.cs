@@ -34,9 +34,16 @@ public class EnemyController : MonoBehaviour
 
     public EnemyState enemyState;
 
+    public Transform spawnPoint;
+    public GameObject ammo;
+    float currentDelay;
+    public float fireRate = 2.0f;
+    Transform target;
+
     // Start is called before the first frame update
     void Start()
     {
+        target = GameObject.Find("Player").transform;
         GameManager.instance.activeEnemies.Add(this);
        // GameManager.instance.mainEnemies.Add(this);
     }
@@ -63,6 +70,7 @@ public class EnemyController : MonoBehaviour
           //      isIdle = false;
                 isDiving = true;
                 MoveOnPath(pathToFollow);
+                SpawnBullet();
                 break;
             default:               
                 break;
@@ -114,7 +122,7 @@ public class EnemyController : MonoBehaviour
 
         if (userBezier)
         {
-            Debug.Log("Size of Path" + path.bezierObj.Count);
+            //Debug.Log("Size of Path" + path.bezierObj.Count);
             // Move Enemy
             distance = Vector3.Distance(path.bezierObj[currentWayPoint],
                                         transform.position);
@@ -252,6 +260,21 @@ public class EnemyController : MonoBehaviour
             transform.SetParent(null);
             enemyState = EnemyState.DIVING;
 
+        }
+    }
+
+    void SpawnBullet() {
+        currentDelay+= Time.deltaTime;
+        if (currentDelay >= fireRate && ammo != null && spawnPoint != null) {
+            spawnPoint.LookAt(target);
+            float yAngle = Random.Range(-10,10);
+            spawnPoint.transform.Rotate(0,yAngle,0, Space.Self);
+            Instantiate(ammo, spawnPoint.position, spawnPoint.rotation);
+            Debug.Log(spawnPoint.rotation);
+
+            //spawnPoint.LookAt(target);
+            //Instantiate(ammo, spawnPoint.position, spawnPoint.rotation);
+            currentDelay = 0;
         }
     }
 }

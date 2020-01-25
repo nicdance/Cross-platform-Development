@@ -71,9 +71,10 @@ public class GameManager : MonoBehaviour
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void CheckNewLevel() {
+    public void CheckNewLevel()
+    {
         if (!AreEnemiesAlive())
-        {
+            {
             Debug.Log("All Enemies Dead");
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("DivePath"))
             {
@@ -125,6 +126,8 @@ public class GameManager : MonoBehaviour
 
     public void ResetEnemies()
     {
+        StopAllCoroutines();
+        Debug.Log("ResetEnemies");
         activeEnemies.Clear();
       //  EnemyPool.instance.ResetEnemies();
         gameStarted = false;

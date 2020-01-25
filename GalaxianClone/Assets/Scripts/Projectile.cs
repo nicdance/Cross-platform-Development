@@ -8,6 +8,13 @@ public class Projectile : MonoBehaviour
 {
     public float speed;
     private Rigidbody rb;
+
+    public enum Target {
+        PLAYER,
+        ENEMY,
+    }
+
+    public Target target;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,27 +31,39 @@ public class Projectile : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-    private void OnCollisionEnter(Collision collision)       
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
-            enemy.HitEnemy();
-        }
-        // MusicManager.instance.PlaySplatSound();
-     //   GameManager.instance.CheckEnemiesActive();
-        DestroyProjectile();
-    }
+    //private void OnCollisionEnter(Collision collision)       
+    //{
+    //    if (collision.gameObject.CompareTag("Enemy"))
+    //    {
+    //        EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
+    //        enemy.HitEnemy();
+    //    }
+    //    // MusicManager.instance.PlaySplatSound();
+    // //   GameManager.instance.CheckEnemiesActive();
+    //    DestroyProjectile();
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (target == Target.ENEMY)
         {
-            EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
-            enemy.HitEnemy();
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                EnemyController enemy = other.gameObject.GetComponent<EnemyController>();
+                enemy.HitEnemy();
+            }
+        }
+        else
+        if (target == Target.PLAYER)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                PlayerController player = other.gameObject.GetComponent<PlayerController>();
+                player.LooseLife();
+            }
         }
         // MusicManager.instance.PlaySplatSound();
-     //   GameManager.instance.CheckEnemiesActive();
+        //   GameManager.instance.CheckEnemiesActive();
         DestroyProjectile();
     }
 

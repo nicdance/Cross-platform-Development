@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb = null;
 
     //Used for projectiles
+
+    [Header("Projectile")]
     public Projectile projectilePrefad;
     public Transform spawnPoint;
     public ProjectilePool projectilePool;
@@ -23,9 +25,15 @@ public class PlayerController : MonoBehaviour
     public float timeToNextFire;
 
 
+    [Header("Lives")]
+    public int startingLives;
+    int currentLives;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        currentLives = startingLives;
         timeToNextFire = Time.time + fireSpeed;
         rb = GetComponent<Rigidbody>();
         controller = GetComponent<CharacterController>();
@@ -37,22 +45,31 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       // if (GameManager.instance.gameStarted)
+        float moveHorizontal = GetMovement();
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f,0.0f);
+        rb.velocity = movement * speed;
+
+        if (GetFire() && Time.time >timeToNextFire && GameManager.instance.gameStarted)
         {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-            Vector3 movement = new Vector3(moveHorizontal, 0.0f,0.0f);
-            rb.velocity = movement * speed;
-
-            if (Input.GetButtonDown("Fire1") && Time.time >timeToNextFire && GameManager.instance.gameStarted)
-            {
-                timeToNextFire = Time.time + fireSpeed;
-                Projectile clone;
-                clone = projectilePool.GetProjectile();
-                clone.transform.position = spawnPoint.transform.position;
-                clone.gameObject.SetActive(true);
-            }
-
+            timeToNextFire = Time.time + fireSpeed;
+            Projectile clone;
+            clone = projectilePool.GetProjectile();
+            clone.transform.position = spawnPoint.transform.position;
+            clone.gameObject.SetActive(true);
         }
+    }
+
+    private float GetMovement() {
+
+        return Input.GetAxis("Horizontal");
+    }
+
+    private bool GetFire() {
+       return Input.GetButtonDown("Fire1");
+    }
+
+    public void LooseLife() {
+        currentLives--;
     }
 
     void LateUpdate()
