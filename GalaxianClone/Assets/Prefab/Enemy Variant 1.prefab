@@ -10,7 +10,17 @@ PrefabInstance:
     - target: {fileID: 9135754467762606625, guid: 00fb590fac158e74ca7ad0669c0371d8,
         type: 3}
       propertyPath: m_Name
-      value: Enemy
+      value: Enemy Variant 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135754467762606684, guid: 00fb590fac158e74ca7ad0669c0371d8,
+        type: 3}
+      propertyPath: score
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135754467762606684, guid: 00fb590fac158e74ca7ad0669c0371d8,
+        type: 3}
+      propertyPath: divingScore
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 9135754467762606624, guid: 00fb590fac158e74ca7ad0669c0371d8,
         type: 3}

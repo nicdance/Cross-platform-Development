@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     #region Singleton
     public static GameManager instance;
+    private PlayerController player;
 
     private void Awake()
     {
@@ -29,6 +30,9 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI livesText;
+
+    public GameObject GameOverUI;
 
     public int score = 0;
     public int level = 1;
@@ -43,16 +47,26 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        player = playerObj.GetComponent<PlayerController>();
         UpdateUIText();
         activeEnemies = new List<EnemyController>();
       //  mainEnemies = new List<EnemyController>();
     }
 
+    public void GameOver() {
+        GameOverUI.SetActive(true);
+    }
+
+    public void LoadMainMenu() {
+        SceneManager.LoadScene("MainMenu");
+    }
     // Updates the UI text
     public void UpdateUIText()
     {
         scoreText.text = "SCORE: " + score;
         levelText.text = "Level: " + level;
+        livesText.text = "Lives: " + player.Lives;
     }
 
     public void AddToScore(int pointsScored) {

@@ -5,6 +5,9 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public int score;
+    public int divingScore;
+    public AudioSource audio;
+
 
     // Path Details
     public Paths pathToFollow;
@@ -17,6 +20,7 @@ public class EnemyController : MonoBehaviour
     public bool isDead = false;
     public bool isIdle = false;
     public bool setUpStart = true;
+    public bool startDive = false;
 
     private float distance; // disance to next point
     public float WaitToIdle = 1.0f;
@@ -40,9 +44,13 @@ public class EnemyController : MonoBehaviour
     public float fireRate = 2.0f;
     Transform target;
 
+    public GameObject explosionFX;
+
     // Start is called before the first frame update
     void Start()
     {
+        audio = GetComponent<AudioSource>();
+        fireRate += Random.Range(-.2f, .2f);
         target = GameObject.Find("Player").transform;
         GameManager.instance.activeEnemies.Add(this);
        // GameManager.instance.mainEnemies.Add(this);
@@ -62,12 +70,18 @@ public class EnemyController : MonoBehaviour
                 MoveToFormation();
                 break;
             case EnemyState.IDLE:
+                startDive = false;
                 setUpStart = false;
                 isDiving = false;
                // CheckInPosition();
                 break;
             case EnemyState.DIVING:
-          //      isIdle = false;
+                //      isIdle = false;
+                if (startDive)
+                {
+                    startDive = false;
+                    StartCoroutine("PlayDiveSound");
+                }
                 isDiving = true;
                 MoveOnPath(pathToFollow);
                 SpawnBullet();
@@ -76,6 +90,11 @@ public class EnemyController : MonoBehaviour
                 break;
         }
         
+    }
+
+    IEnumerator PlayDiveSound() {
+        audio.Play();
+        return null;
     }
 
     bool  CheckInPosition() {
@@ -213,6 +232,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public void HitEnemy() {
+        audio.Stop();
         isDead = true;
         GameManager.instance.activeEnemies.Remove(this);
 
@@ -230,6 +250,8 @@ public class EnemyController : MonoBehaviour
         // PLay sound
 
         // show particles
+
+        Instantiate(explosionFX, transform.position, Quaternion.identity);
 
         // increment score
         GameManager.instance.AddToScore(score);
@@ -258,6 +280,7 @@ public class EnemyController : MonoBehaviour
             pathToFollow = path;
             //Debug.Log(transform.parent.parent);
             transform.SetParent(null);
+            startDive = true;
             enemyState = EnemyState.DIVING;
 
         }
@@ -266,15 +289,33 @@ public class EnemyController : MonoBehaviour
     void SpawnBullet() {
         currentDelay+= Time.deltaTime;
         if (currentDelay >= fireRate && ammo != null && spawnPoint != null) {
-            spawnPoint.LookAt(target);
-            float yAngle = Random.Range(-10,10);
-            spawnPoint.transform.Rotate(0,yAngle,0, Space.Self);
-            Instantiate(ammo, spawnPoint.position, spawnPoint.rotation);
-            Debug.Log(spawnPoint.rotation);
+            //spawnPoint.LookAt(target);
+            //float yAngle = Random.Range(-10,10);
+            //spawnPoint.transform.Rotate(0,yAngle,0, Space.Self);
+
+
+            Projectile clone;
+            clone = EnemyProjectilePool.instance.GetProjectile();
+            clone.transform.position = spawnPoint.transform.position;
+            clone.transform.rotation = spawnPoint.rotation;
+            clone.gameObject.SetActive(true);
+
+
+            //Instantiate(ammo, spawnPoint.position, spawnPoint.rotation);
+
 
             //spawnPoint.LookAt(target);
             //Instantiate(ammo, spawnPoint.position, spawnPoint.rotation);
             currentDelay = 0;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+       if (other.gameObject.CompareTag("Player"))
+        {
+            PlayerController player = other.gameObject.GetComponent<PlayerController>();
+            player.LooseLife();
         }
     }
 }

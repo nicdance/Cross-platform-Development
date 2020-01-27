@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
 {
     public float speed;
     private Rigidbody rb;
+    public AudioSource audio;
 
     public enum Target {
         PLAYER,
@@ -19,6 +20,8 @@ public class Projectile : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        audio = GetComponent<AudioSource>();
+        audio.Play();
     }
 
     // Update is called once per frame

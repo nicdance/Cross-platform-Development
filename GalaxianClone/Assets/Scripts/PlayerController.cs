@@ -23,17 +23,32 @@ public class PlayerController : MonoBehaviour
     public ProjectilePool projectilePool;
     public float fireSpeed= 0.5f;
     public float timeToNextFire;
+    public GameObject explosionFX;
 
 
     [Header("Lives")]
+    bool alreadyDead = false;
     public int startingLives;
     int currentLives;
+    public int Lives
+    {
+        get
+        {
+            //Some other code
+            return currentLives;
+        }
+        set
+        {
+            //Some other code
+            currentLives = value;
+        }
+    }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        currentLives = startingLives;
+        Lives = startingLives;
         timeToNextFire = Time.time + fireSpeed;
         rb = GetComponent<Rigidbody>();
         controller = GetComponent<CharacterController>();
@@ -69,7 +84,20 @@ public class PlayerController : MonoBehaviour
     }
 
     public void LooseLife() {
-        currentLives--;
+
+        Instantiate(explosionFX, transform.position, Quaternion.identity);
+        Lives--;
+        if (Lives <= 0 && !alreadyDead)
+        {
+            gameObject.SetActive(false);
+            alreadyDead = true;
+            Lives = 0;
+            GameManager.instance.GameOver();
+
+        } else if (alreadyDead) {
+            Lives = 0;
+        }
+            GameManager.instance.UpdateUIText();
     }
 
     void LateUpdate()
