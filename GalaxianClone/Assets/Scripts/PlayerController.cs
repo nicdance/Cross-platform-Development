@@ -60,8 +60,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float moveHorizontal = GetMovement();
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f,0.0f);
+        Vector3 movement = GetMovement();
+        Debug.Log(movement);
+        Debug.Log(movement.normalized);
         rb.velocity = movement * speed;
 
         if (GetFire() && Time.time >timeToNextFire && GameManager.instance.gameStarted)
@@ -74,13 +75,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private float GetMovement() {
+    private Vector3 GetMovement() {
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_WEBGL
+        float moveHorizontal = Input.GetAxisRaw("Horizontal") * Time.deltaTime;
 
-        return Input.GetAxis("Horizontal");
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f).normalized;
+        return movement;
+#endif
+
+#if UNITY_ANDROID
+        Vector3 Movement =  new Vector3 (Input.acceleration.x, 0.0f, 0.0f);
+        return Movement;
+#endif
     }
 
     private bool GetFire() {
-       return Input.GetButtonDown("Fire1");
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_WEBGL
+        return Input.GetButtonDown("Fire1");
+#endif
+
+#if UNITY_ANDROID
+        
+        if (Input.touchCount > 0)
+        {
+            return true;
+        }
+        return false;
+#endif
     }
 
     public void LooseLife() {

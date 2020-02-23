@@ -27,6 +27,13 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    public Animator readyText;
+    public Animator setText;
+    public Animator goText;
+    public Animator levelDisplayText;
+
+
+    public TextMeshProUGUI levelLoadText;
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI levelText;
@@ -68,6 +75,24 @@ public class GameManager : MonoBehaviour
         levelText.text = "Level: " + level;
         livesText.text = "Lives: " + player.Lives;
     }
+
+    public void UpdateAndShowLevelText()
+    {
+        levelLoadText.text = "Level " + level;
+        // levelDisplayText.ResetTrigger("fadeOut");
+        // levelDisplayText.SetTrigger("fadeIn");
+        levelDisplayText.SetBool("fadeOut", false);
+        levelDisplayText.SetBool("fadeIn", true);
+    }
+
+    public void HideLevelText()
+    {
+        //levelDisplayText.ResetTrigger("fadeIn");
+        //levelDisplayText.SetTrigger("fadeOut");
+        levelDisplayText.SetBool("fadeIn", false);
+        levelDisplayText.SetBool("fadeOut", true);
+    }
+
 
     public void AddToScore(int pointsScored) {
         score += pointsScored;

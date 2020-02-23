@@ -254,7 +254,13 @@ public class EnemyController : MonoBehaviour
         Instantiate(explosionFX, transform.position, Quaternion.identity);
 
         // increment score
-        GameManager.instance.AddToScore(score);
+        if (isDiving)
+        {
+            GameManager.instance.AddToScore(divingScore);
+        }
+        else {
+            GameManager.instance.AddToScore(score);
+        }
 
 
         //hide enemy

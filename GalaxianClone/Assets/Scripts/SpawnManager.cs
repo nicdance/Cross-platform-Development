@@ -103,7 +103,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator CheckReadyToDive()
     {
         Debug.Log("Waiting for first Dive Check:" + untilFirstDiveCheck);
-        yield return new WaitForSeconds(untilFirstDiveCheck);
+        //yield return new WaitForSeconds(untilFirstDiveCheck);
         Debug.Log("Check if idle");
         while (!GameManager.instance.CheckIdle())
         {
@@ -112,6 +112,9 @@ public class SpawnManager : MonoBehaviour
         }
         Debug.Log("all activeEnemies idle");
         //Invoke("SetDiving", Random.Range(1, 3));
+
+        GameManager.instance.goText.SetTrigger("isFadeInOut");
+        yield return new WaitForSeconds(2f);
         StopCoroutine("SetDiving");
         StartCoroutine("SetDiving");
         yield return null;
@@ -178,6 +181,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnWaves()
     {
+        GameManager.instance.UpdateAndShowLevelText();
         Debug.Log("Spawn Wave");
         for (int i = 0; i < waveList[currentWave].pathPrefabs.Length; i++)
         {
@@ -187,6 +191,15 @@ public class SpawnManager : MonoBehaviour
         }
         while (currentWave < waveList.Count)
         {
+        //    if (currentWave == 1) 
+        //    {
+        //        GameManager.instance.readyText.SetTrigger("isFadeInOut");
+        //    }
+        //    if (currentWave == 2)
+        //    {
+        //        GameManager.instance.setText.SetTrigger("isFadeInOut");
+        //    }
+
             Debug.Log("Spawn Wave " + currentWave);
             // Small Ships first
             Debug.Log("Bottom for Wave " + waveList[currentWave].spawnPerWave);
@@ -241,6 +254,11 @@ public class SpawnManager : MonoBehaviour
         }
         Debug.Log("Waves Spawned");
 
+        GameManager.instance.HideLevelText();
+        yield return new WaitForSeconds(2f);
+        GameManager.instance.readyText.SetTrigger("isFadeInOut");
+        yield return new WaitForSeconds(2f);
+        GameManager.instance.setText.SetTrigger("isFadeInOut");
 
         StopCoroutine("CheckReadyToDive");
         StartCoroutine("CheckReadyToDive");
