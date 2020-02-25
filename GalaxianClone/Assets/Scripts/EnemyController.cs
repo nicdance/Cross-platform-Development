@@ -11,8 +11,9 @@ public class EnemyController : MonoBehaviour
 
     // Path Details
     public Paths pathToFollow;
-    public int currentWayPoint=0;
-    public float speed = 2;
+    public int currentWayPoint = 0;
+    public float speed = 20;
+    public float increaseSpeedBy = 10;
     public float reachDistance = 0.4f;
     public float rotationSpeed = 5f;
     public bool userBezier = false;
@@ -92,6 +93,13 @@ public class EnemyController : MonoBehaviour
         
     }
 
+    public void IncreaseSpeed(float increaseMultiplier)
+    {
+        //Debug.Log("Speed Was: " + speed);
+        speed = speed + (increaseSpeedBy * increaseMultiplier);
+        //Debug.Log("Speed Now: " + speed);
+        rotationSpeed = rotationSpeed + (increaseSpeedBy * increaseMultiplier);
+    }
     IEnumerator PlayDiveSound() {
         audio.Play();
         return null;
@@ -273,7 +281,7 @@ public class EnemyController : MonoBehaviour
     }
 
     IEnumerator CheckLevel() {
-        Debug.Log("checking Level");
+        //Debug.Log("checking Level");
         GameManager.instance.CheckNewLevel();
         yield return null;
     }

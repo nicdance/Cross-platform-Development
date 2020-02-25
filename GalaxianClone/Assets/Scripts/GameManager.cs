@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel()
     {
-        Debug.Log("Next Level Called");
+        //Debug.Log("Next Level Called");
         level ++;
         UpdateUIText();
         ResetEnemies();
@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
     public void ResetEnemies()
     {
         StopAllCoroutines();
-        Debug.Log("ResetEnemies");
+        //Debug.Log("ResetEnemies");
         activeEnemies.Clear();
       //  EnemyPool.instance.ResetEnemies();
         gameStarted = false;
@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
     }
 
     public bool CheckIdle() {
-        Debug.Log("CheckIdle");
+        //Debug.Log("CheckIdle");
         foreach (var enemy in activeEnemies)
         {
             if (enemy.enemyState != EnemyController.EnemyState.IDLE)

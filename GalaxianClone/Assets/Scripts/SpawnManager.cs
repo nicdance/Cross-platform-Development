@@ -13,7 +13,7 @@ public class SpawnManager : MonoBehaviour
     int enemyID = 0;
     int mediumID = 0;
     int largeID = 0;
-
+    
 
     [Header("Dive")]
     public float minDiveInterval;
@@ -70,7 +70,7 @@ public class SpawnManager : MonoBehaviour
         StopCoroutine("SetDiving");
         CancelInvoke("StartSpawn");
 
-        Debug.Log("ResetWave");
+       // Debug.Log("ResetWave");
         foreach (Paths path in activePaths)
         {
             Destroy(path.gameObject);
@@ -102,7 +102,7 @@ public class SpawnManager : MonoBehaviour
     //}
     IEnumerator CheckReadyToDive()
     {
-        Debug.Log("Waiting for first Dive Check:" + untilFirstDiveCheck);
+        //Debug.Log("Waiting for first Dive Check:" + untilFirstDiveCheck);
         //yield return new WaitForSeconds(untilFirstDiveCheck);
         Debug.Log("Check if idle");
         while (!GameManager.instance.CheckIdle())
@@ -122,7 +122,7 @@ public class SpawnManager : MonoBehaviour
 
     public void StartNewDive()
     {
-        Debug.Log("Start New Dive");
+        //Debug.Log("Start New Dive");
         StopCoroutine("CheckReadyToDive");
         StopCoroutine("SetDiving");
         StopAllCoroutines();
@@ -131,7 +131,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator  SetDiving()
     {
-        Debug.Log("setDiving");
+        //Debug.Log("setDiving");
         CancelInvoke("StartNewDive");
         //if (GameManager.instance.activeEnemies.Count > 0)
         if (GameManager.instance.AreEnemiesAlive())
@@ -182,7 +182,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnWaves()
     {
         GameManager.instance.UpdateAndShowLevelText();
-        Debug.Log("Spawn Wave");
+        //Debug.Log("Spawn Wave");
         for (int i = 0; i < waveList[currentWave].pathPrefabs.Length; i++)
         {
             GameObject newPathObject = Instantiate(waveList[currentWave].pathPrefabs[i], transform.position, Quaternion.identity) as GameObject;
@@ -200,14 +200,15 @@ public class SpawnManager : MonoBehaviour
         //        GameManager.instance.setText.SetTrigger("isFadeInOut");
         //    }
 
-            Debug.Log("Spawn Wave " + currentWave);
+            //Debug.Log("Spawn Wave " + currentWave);
             // Small Ships first
-            Debug.Log("Bottom for Wave " + waveList[currentWave].spawnPerWave);
+            //Debug.Log("Bottom for Wave " + waveList[currentWave].spawnPerWave);
             for (int i = 0; i < waveList[currentWave].spawnPerWave; i++)
             {
-                Debug.Log("Bottom " + i);
+                //Debug.Log("Bottom " + i);
                 GameObject newEnemy = Instantiate(smallEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
                  EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                enemyController.IncreaseSpeed(GameManager.instance.level - 1f);
               //  EnemyController enemyController = EnemyPool.instance.GetEnemy();
                 enemyController.SpawnSetup(activePaths[PathsToTake()], enemyID, smallFormation);
                 enemyID++;
@@ -220,9 +221,10 @@ public class SpawnManager : MonoBehaviour
             Debug.Log("Middle for Wave " + waveList[currentWave].mediumPerWave);
             for (int i = 0; i < waveList[currentWave].mediumPerWave; i++)
             {
-                Debug.Log("Middle " + i);
+                //Debug.Log("Middle " + i);
                 GameObject newEnemy = Instantiate(mediumEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
                EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                enemyController.IncreaseSpeed(GameManager.instance.level - 1f);
 
                 //EnemyController enemyController = EnemyPool.instance.GetEnemy();
                 enemyController.SpawnSetup(activePaths[PathsToTake()], mediumID, mediumFormation);
@@ -233,12 +235,13 @@ public class SpawnManager : MonoBehaviour
 
             // Large  Ships first
 
-            Debug.Log("Top for Wave " + waveList[currentWave].largePerWave);
+            //Debug.Log("Top for Wave " + waveList[currentWave].largePerWave);
             for (int i = 0; i < waveList[currentWave].largePerWave; i++)
             {
-                Debug.Log("Top" +i);
+                //Debug.Log("Top" +i);
                 GameObject newEnemy = Instantiate(largeEnemyPrefab, transform.position, Quaternion.identity) as GameObject;
                 EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                enemyController.IncreaseSpeed(GameManager.instance.level - 1f);
 
 
                 //EnemyController enemyController = EnemyPool.instance.GetEnemy();
@@ -252,7 +255,7 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitForSeconds(waveSpawnInterval);
             currentWave++;
         }
-        Debug.Log("Waves Spawned");
+        //Debug.Log("Waves Spawned");
 
         GameManager.instance.HideLevelText();
         yield return new WaitForSeconds(2f);
@@ -271,7 +274,7 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawn() {
 
-        Debug.Log("StartSpawn");
+       // Debug.Log("StartSpawn");
         StartCoroutine("SpawnWaves");
         CancelInvoke("StartSpawn");
     }

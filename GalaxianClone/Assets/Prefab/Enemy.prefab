@@ -224,9 +224,10 @@ MonoBehaviour:
   audio: {fileID: 0}
   pathToFollow: {fileID: 0}
   currentWayPoint: 0
-  speed: 19
+  speed: 20
+  increaseSpeedBy: 2
   reachDistance: 0.4
-  rotationSpeed: 11
+  rotationSpeed: 10
   userBezier: 1
   isDiving: 0
   isDead: 0

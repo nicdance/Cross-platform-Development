@@ -61,9 +61,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Vector3 movement = GetMovement();
-        Debug.Log(movement);
-        Debug.Log(movement.normalized);
-        rb.velocity = movement * speed;
+        //Debug.Log(movement);
+        //Debug.Log(movement.normalized);
+        //rb.velocity = movement * speed;
+        transform.position += movement * speed * Time.deltaTime;
 
         if (GetFire() && Time.time >timeToNextFire && GameManager.instance.gameStarted)
         {
@@ -85,7 +86,8 @@ public class PlayerController : MonoBehaviour
 
 #if UNITY_ANDROID
         Vector3 Movement =  new Vector3 (Input.acceleration.x, 0.0f, 0.0f);
-        return Movement;
+
+        return Movement.normalized;
 #endif
     }
 
