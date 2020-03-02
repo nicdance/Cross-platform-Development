@@ -38,7 +38,6 @@ public class SpawnManager : MonoBehaviour
     [System.Serializable]   
     public class Wave {
         public GameObject[] pathPrefabs;
-
         public int spawnPerWave; // Number of ships to spawn per wave
         public int mediumPerWave; // Number of  medium ships to spawn per wave
         public int largePerWave; // Number of large ships to spawn per wave
@@ -60,7 +59,6 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         Invoke("StartSpawn", untilFirstSpawn);
-        //StartCoroutine("CheckReadyToDive");
     }
 
     public void ResetWave()
@@ -92,18 +90,9 @@ public class SpawnManager : MonoBehaviour
         Invoke("StartSpawn", untilFirstSpawn);
         //StartCoroutine("CheckReadyToDive");
     }
-    //public void ResetEnemies()
-    //{
-    //    foreach (EnemyController enemy in activeEnemies)
-    //    {
-    //        enemy.gameObject.SetActive(true);
-    //    }
 
-    //}
     IEnumerator CheckReadyToDive()
     {
-        //Debug.Log("Waiting for first Dive Check:" + untilFirstDiveCheck);
-        //yield return new WaitForSeconds(untilFirstDiveCheck);
         Debug.Log("Check if idle");
         while (!GameManager.instance.CheckIdle())
         {

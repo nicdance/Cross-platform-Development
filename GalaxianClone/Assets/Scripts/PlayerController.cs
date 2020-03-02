@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     
     public float speed = 5f;
     public Rigidbody rb = null;
+    public bool WasJustHit = false;
+    public float pauseUntilHit = 2f;
 
     //Used for projectiles
 
@@ -107,7 +109,11 @@ public class PlayerController : MonoBehaviour
     }
 
     public void LooseLife() {
-
+        if (WasJustHit)
+        {
+            return;
+        }
+        WasJustHit = true;
         Instantiate(explosionFX, transform.position, Quaternion.identity);
         Lives--;
         if (Lives <= 0 && !alreadyDead)
@@ -121,7 +127,14 @@ public class PlayerController : MonoBehaviour
             Lives = 0;
         }
             GameManager.instance.UpdateUIText();
+        StartCoroutine("PauseUntilNextHit");
     }
+
+    IEnumerator PauseUntilNextHit() {
+        yield return new WaitForSeconds(pauseUntilHit);
+        WasJustHit = false;
+    }
+    
 
     void LateUpdate()
     {

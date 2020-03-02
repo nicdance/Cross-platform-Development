@@ -1,16 +1,23 @@
-﻿using System.Collections;
+﻿
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
+///
+///    \brief Game Manager Holds core detalis of the Game.
+///
+///    And update  the UI Elements as required. 
+///
 public class GameManager : MonoBehaviour
 {
 
     #region Singleton
-    public static GameManager instance;
-    private PlayerController player;
+    public static GameManager instance; /// Singleton Game Manage object which is accessable from any object.
+    private PlayerController player; /// Player Stores aReference to the player.
 
     private void Awake()
     {
@@ -21,13 +28,11 @@ public class GameManager : MonoBehaviour
             return;
         }
         instance = this;
-
-      //  DontDestroyOnLoad(this.gameObject);
     }
 
     #endregion
 
-    public Animator readyText;
+    public Animator readyText; /// Reference to the Ready Text
     public Animator setText;
     public Animator goText;
     public Animator levelDisplayText;
@@ -51,7 +56,11 @@ public class GameManager : MonoBehaviour
 
     public SpawnManager spawnManager;
 
-    // Start is called before the first frame update
+    public Image[] lives;
+
+    ///
+    ///Start is called before the first frame update
+    /// 
     void Start()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -61,34 +70,65 @@ public class GameManager : MonoBehaviour
       //  mainEnemies = new List<EnemyController>();
     }
 
+    ///
+    ///   Displays the Game Over Screen 
+    ///
     public void GameOver() {
-        GameOverUI.SetActive(true);
+        GameOverUI.SetActive(true); 
     }
 
+
+    ///
+    ///   Loads the Main Menu 
+    ///
     public void LoadMainMenu() {
         SceneManager.LoadScene("MainMenu");
     }
-    // Updates the UI text
+
+
+    ///
+    ///   Update the UI Score, Level and Playe Lives values
+    ///
     public void UpdateUIText()
     {
         scoreText.text = "SCORE: " + score;
         levelText.text = "Level: " + level;
         livesText.text = "Lives: " + player.Lives;
+        UpdateLives();
     }
 
+    ///
+    /// Updates the UI element showing current lives.
+    ///
+    private void UpdateLives() {
+        for (int ii = 0; ii < lives.Length; ii++)
+        {
+            if (ii <= player.Lives - 1)
+            {
+                lives[ii].gameObject.SetActive(true);
+            }
+            else {
+                lives[ii].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    ///
+    ///  Shows the Level title 
+    ///
     public void UpdateAndShowLevelText()
     {
         levelLoadText.text = "Level " + level;
-        // levelDisplayText.ResetTrigger("fadeOut");
-        // levelDisplayText.SetTrigger("fadeIn");
-        levelDisplayText.SetBool("fadeOut", false);
+        levelDisplayText.SetBool("fadeOut", false); /// Fade
         levelDisplayText.SetBool("fadeIn", true);
     }
 
+
+    ///
+    ///  Hides the Level Title 
+    ///
     public void HideLevelText()
     {
-        //levelDisplayText.ResetTrigger("fadeIn");
-        //levelDisplayText.SetTrigger("fadeOut");
         levelDisplayText.SetBool("fadeIn", false);
         levelDisplayText.SetBool("fadeOut", true);
     }
@@ -109,7 +149,6 @@ public class GameManager : MonoBehaviour
 
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
     public void CheckNewLevel()
     {
         if (!AreEnemiesAlive())
@@ -127,6 +166,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    /**
+     * Checks If all enenmies are alive
+     * @return bool if all enemmies alive
+     */
     public bool AreEnemiesAlive()
     {
         if (activeEnemies.Count <1)
