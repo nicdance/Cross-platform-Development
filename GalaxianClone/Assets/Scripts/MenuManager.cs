@@ -18,6 +18,32 @@ public class MenuManager : MonoBehaviour
     }
 
 
+    public void HighScoreScene()
+    {
+        SceneManager.LoadScene("HighScore");
+    }
+
+
+
+    public void GameInfoScene()
+    {
+        SceneManager.LoadScene("GameInfo");
+    }
+
+
+
+    public void GameOverScene()
+    {
+        SceneManager.LoadScene("GameOver");
+    }
+
+
+    public void MainMenuScene()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+
     public void ExitGame() {
         Application.Quit();
     }

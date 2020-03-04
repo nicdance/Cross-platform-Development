@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
 
     public int score = 0;
     public int level = 1;
+    private int lifeScore = 0;
+    public int pointsToExtraLife = 3000;
 
     public List<EnemyController> activeEnemies;
     public List<EnemyController> mainEnemies;
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
     public SpawnManager spawnManager;
 
     public Image[] lives;
+
+    public MenuManager menuManager;
 
     ///
     ///Start is called before the first frame update
@@ -74,7 +78,9 @@ public class GameManager : MonoBehaviour
     ///   Displays the Game Over Screen 
     ///
     public void GameOver() {
-        GameOverUI.SetActive(true); 
+        //GameOverUI.SetActive(true); 
+        HighScores.instance.currentScore = score;
+        menuManager.GameOverScene();
     }
 
 
@@ -136,6 +142,12 @@ public class GameManager : MonoBehaviour
 
     public void AddToScore(int pointsScored) {
         score += pointsScored;
+        lifeScore += pointsScored;
+        if (lifeScore >= pointsToExtraLife)
+        {
+            lifeScore = 0;
+            player.AddLife();   
+        }
         UpdateUIText();
     }
 

@@ -107,6 +107,16 @@ public class PlayerController : MonoBehaviour
         return false;
 #endif
     }
+    public void AddLife() {
+        if (Lives>= startingLives)
+        {
+            Lives = 0;
+        }
+        else
+        {
+            Lives++;
+        }
+    }
 
     public void LooseLife() {
         if (WasJustHit)

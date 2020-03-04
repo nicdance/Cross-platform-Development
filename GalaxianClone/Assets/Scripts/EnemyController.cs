@@ -149,8 +149,6 @@ public class EnemyController : MonoBehaviour
 
         if (userBezier)
         {
-            //Debug.Log("Size of Path" + path.bezierObj.Count);
-            // Move Enemy
             distance = Vector3.Distance(path.bezierObj[currentWayPoint],
                                         transform.position);
             transform.position = Vector3.MoveTowards(transform.position,
