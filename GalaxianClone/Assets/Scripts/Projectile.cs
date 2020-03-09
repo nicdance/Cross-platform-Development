@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour
     public float speed;
     private Rigidbody rb;
     public AudioSource audio;
+    private Options options;
 
     public enum Target {
         PLAYER,
@@ -21,6 +22,8 @@ public class Projectile : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody>();
         audio = GetComponent<AudioSource>();
+        options = FindObjectOfType<Options>();
+        audio.volume = options.SoundLevel;
         audio.Play();
     }
 

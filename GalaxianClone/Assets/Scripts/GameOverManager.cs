@@ -7,19 +7,36 @@ using UnityEngine.UI;
 public class GameOverManager : MonoBehaviour
 {
 
-    public TextMeshProUGUI scoresText;
+    public TextMeshProUGUI pcScoresText;
+    public TextMeshProUGUI mobileScoresText;
     public Text enterYourName;
     public MenuManager menuManager;
+
+    public GameObject mobileUI;
+    public GameObject pcUI;
     // Start is called before the first frame update
     void Start()
     {
-        scoresText.text = HighScores.instance.currentScore+ "";
+
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_WEBGL
+        pcUI.SetActive(true);
+        mobileUI.SetActive(false);
+        pcScoresText.text = HighScores.instance.currentScore + "";
+#endif
+
+#if UNITY_ANDROID
+        mobileUI.SetActive(true);
+        pcUI.SetActive(false);
+        mobileScoresText.text = HighScores.instance.currentScore + "";
+        HighScores.instance.currentName = "MobileUser";
+#endif
     }
 
     // Update is called once per frame
     void Update()
     {
-        int _maxLength = 8;
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_WEBGL
+        int _maxLength = 12;
         string _name = enterYourName.text;
         if (_name.Length > _maxLength)
         {
@@ -27,6 +44,7 @@ public class GameOverManager : MonoBehaviour
             enterYourName.text = _name;
         }
         HighScores.instance.currentName = _name;
+#endif
 
     }
     

@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public int score;
     public int divingScore;
     public AudioSource audio;
+    private Options options;
 
 
     // Path Details
@@ -51,6 +52,8 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         audio = GetComponent<AudioSource>();
+        options = FindObjectOfType<Options>();
+        audio.volume = options.SoundLevel;
         fireRate += Random.Range(-.2f, .2f);
         target = GameObject.Find("Player").transform;
         GameManager.instance.activeEnemies.Add(this);
